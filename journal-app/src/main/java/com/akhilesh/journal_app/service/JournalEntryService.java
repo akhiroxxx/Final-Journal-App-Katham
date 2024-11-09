@@ -1,5 +1,6 @@
 package com.akhilesh.journal_app.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ public class JournalEntryService {
 
 
   public void saveEntry(JournalEntry journalEntry){
+    journalEntry.setDate(LocalDateTime.now());
     journalEntryRepository.save(journalEntry);
   }
 
@@ -36,6 +38,8 @@ public class JournalEntryService {
   public void deleteById(ObjectId id){
     journalEntryRepository.deleteById(id);
   } 
+
+
 
   
 }
