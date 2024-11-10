@@ -30,11 +30,17 @@ public class JournalEntryService {
 
   @Transactional
   public void saveEntry(JournalEntry journalEntry, String userName){
-    User user = userService.findByUserName(userName);
-    journalEntry.setDate(LocalDateTime.now());
-    user.getJournalEntries().add(journalEntry);
-    journalEntryRepository.save(journalEntry);
-    userService.saveEntry(user);
+    try
+    {
+      User user = userService.findByUserName(userName);
+      journalEntry.setDate(LocalDateTime.now());
+      user.getJournalEntries().add(journalEntry);
+      journalEntryRepository.save(journalEntry);
+      userService.saveEntry(user);
+    }
+    catch(Exception e){
+      System.out.println(e);
+    }
   }
 
 
