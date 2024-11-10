@@ -7,9 +7,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Document(collection = "final_journal_entries")
 @Data
+@NoArgsConstructor
 public class JournalEntry {
   
   @Id

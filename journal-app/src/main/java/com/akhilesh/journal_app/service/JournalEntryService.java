@@ -7,9 +7,11 @@ import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.akhilesh.journal_app.Repository.JournalEntryRepository;
 import com.akhilesh.journal_app.entity.JournalEntry;
+import com.akhilesh.journal_app.entity.User;
 
 
 @Component
@@ -18,10 +20,21 @@ public class JournalEntryService {
   @Autowired
   private JournalEntryRepository journalEntryRepository;
 
+  @Autowired
+  private UserService userService;
 
   public void saveEntry(JournalEntry journalEntry){
-    journalEntry.setDate(LocalDateTime.now());
     journalEntryRepository.save(journalEntry);
+  }
+
+
+  @Transactional
+  public void saveEntry(JournalEntry journalEntry, String userName){
+    User user = userService.findByUserName(userName);
+    journalEntry.setDate(LocalDateTime.now());
+    user.getJournalEntries().add(journalEntry);
+    journalEntryRepository.save(journalEntry);
+    userService.saveEntry(user);
   }
 
 
@@ -35,8 +48,11 @@ public class JournalEntryService {
   }
 
 
-  public void deleteById(ObjectId id){
+  public void deleteById(ObjectId id, String userName){
     journalEntryRepository.deleteById(id);
+    User user = userService.findByUserName(userName);
+    user.getJournalEntries().removeIf(x->x.getId().equals(id));
+    userService.saveEntry(user);
   } 
 
 
