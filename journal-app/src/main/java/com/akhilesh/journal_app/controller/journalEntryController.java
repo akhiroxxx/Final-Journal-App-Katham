@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import com.akhilesh.journal_app.entity.User;
 import com.akhilesh.journal_app.service.JournalEntryService;
 import com.akhilesh.journal_app.service.UserService;
 
+@Log4j2
 @RestController
 @RequestMapping("/journal")
 public class journalEntryController {
@@ -46,14 +48,14 @@ public class journalEntryController {
   }
   
 
-  @PostMapping("/{userName}")
+  @PostMapping("{userName}")
   public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry newEntry, @PathVariable String userName){
     try {
       newEntry.setDate(LocalDateTime.now());
       journalEntryService.saveEntry(newEntry, userName);
       return new ResponseEntity<>(newEntry, HttpStatus.OK);
     } catch (Exception e) {
-      System.out.println(e);
+      log.error("e: ", e);
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
   }
