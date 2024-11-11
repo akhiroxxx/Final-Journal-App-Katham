@@ -46,13 +46,14 @@ public class journalEntryController {
   }
   
 
-  @PostMapping("{userName}")
+  @PostMapping("/{userName}")
   public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry newEntry, @PathVariable String userName){
     try {
       newEntry.setDate(LocalDateTime.now());
       journalEntryService.saveEntry(newEntry, userName);
       return new ResponseEntity<>(newEntry, HttpStatus.OK);
     } catch (Exception e) {
+      System.out.println(e);
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
   }
